@@ -2,8 +2,9 @@
   "name": "clinix-api-testing",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha ./src/tests/**/*.test.js --reporter mochawesome --timeout 2000"
   },
   "author": "Rafael Zanella, Analista de Testes | QA",
   "license": "ISC",
