@@ -4,7 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "mocha ./src/tests/**/*.test.js --reporter mochawesome --timeout 2000"
+    "test": "mocha ./src/tests/**/*.test.js --reporter mochawesome --timeout 2000",
+    "k6": "K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=src/performance/k6/reports/result.html k6 run src/performance/k6/authentication/authentication-load-test.js"
   },
   "author": "Rafael Zanella, Analista de Testes | QA",
   "license": "ISC",
