@@ -5,9 +5,9 @@
     "passes": 3,
     "pending": 0,
     "failures": 0,
-    "start": "2025-08-22T12:18:12.078Z",
-    "end": "2025-08-22T12:18:12.300Z",
-    "duration": 222,
+    "start": "2025-08-23T00:04:22.018Z",
+    "end": "2025-08-23T00:04:22.251Z",
+    "duration": 233,
     "testsRegistered": 3,
     "passPercent": 100,
     "pendingPercent": 0,
@@ -18,7 +18,7 @@
   },
   "results": [
     {
-      "uuid": "f874369a-f3f9-4979-b5e3-d191fb5bc2a3",
+      "uuid": "eb6282a5-1f4e-4604-8cb3-ce527c995bbe",
       "title": "",
       "fullFile": "/mnt/NAS/Programacao/QA/rafaelzanella/clinix/clinix-api-testing/src/tests/authentication/login.test.js",
       "file": "/src/tests/authentication/login.test.js",
@@ -27,7 +27,7 @@
       "tests": [],
       "suites": [
         {
-          "uuid": "4cc83e35-ef6f-46e0-acb3-bb799b060833",
+          "uuid": "56f873b5-24d7-4203-aa58-30f79fd7a03a",
           "title": "Login de Usuário",
           "fullFile": "/mnt/NAS/Programacao/QA/rafaelzanella/clinix/clinix-api-testing/src/tests/authentication/login.test.js",
           "file": "/src/tests/authentication/login.test.js",
@@ -36,7 +36,7 @@
           "tests": [],
           "suites": [
             {
-              "uuid": "4bab3bf5-03dd-4cba-bba5-574388c6c372",
+              "uuid": "0bb7a925-a224-4e8e-8ee1-d3b99751aeec",
               "title": "Admin",
               "fullFile": "/mnt/NAS/Programacao/QA/rafaelzanella/clinix/clinix-api-testing/src/tests/authentication/login.test.js",
               "file": "/src/tests/authentication/login.test.js",
@@ -47,7 +47,7 @@
                   "title": "Deve autenticar com sucesso usando credenciais válidas",
                   "fullTitle": "Login de Usuário Admin Deve autenticar com sucesso usando credenciais válidas",
                   "timedOut": false,
-                  "duration": 89,
+                  "duration": 91,
                   "state": "passed",
                   "speed": "slow",
                   "pass": true,
@@ -56,26 +56,26 @@
                   "context": null,
                   "code": "const resposta = await apiAuthenticationLogin(emailAdmin, password)\nexpectLoginSuccess(resposta, { customValidations: (res) => {\n    expect(res.body.data.user.type).to.equal('ADMIN')\n  }\n})",
                   "err": {},
-                  "uuid": "4a69d9e9-23bb-4e52-995b-b36bdacd9216",
-                  "parentUUID": "4bab3bf5-03dd-4cba-bba5-574388c6c372",
+                  "uuid": "d1f413df-5629-4a91-b973-2d6b58be805a",
+                  "parentUUID": "0bb7a925-a224-4e8e-8ee1-d3b99751aeec",
                   "isHook": false,
                   "skipped": false
                 }
               ],
               "suites": [],
               "passes": [
-                "4a69d9e9-23bb-4e52-995b-b36bdacd9216"
+                "d1f413df-5629-4a91-b973-2d6b58be805a"
               ],
               "failures": [],
               "pending": [],
               "skipped": [],
-              "duration": 89,
+              "duration": 91,
               "root": false,
               "rootEmpty": false,
               "_timeout": 2000
             },
             {
-              "uuid": "504fa974-bb44-48f0-8cdc-36720e217b29",
+              "uuid": "5d3bd9ec-84c3-4b30-a2f8-ad270f43e532",
               "title": "Farmacêutico",
               "fullFile": "/mnt/NAS/Programacao/QA/rafaelzanella/clinix/clinix-api-testing/src/tests/authentication/login.test.js",
               "file": "/src/tests/authentication/login.test.js",
@@ -86,7 +86,7 @@
                   "title": "Deve autenticar farmacêutico com credenciais válidas",
                   "fullTitle": "Login de Usuário Farmacêutico Deve autenticar farmacêutico com credenciais válidas",
                   "timedOut": false,
-                  "duration": 65,
+                  "duration": 66,
                   "state": "passed",
                   "speed": "medium",
                   "pass": true,
@@ -95,26 +95,26 @@
                   "context": null,
                   "code": "const resposta = await apiAuthenticationLogin(emailFarmaceutico, password)\nexpectLoginSuccess(resposta, { customValidations: (res) => {\n    expect(res.body.data.user.type).to.equal('FARMACEUTICO')\n  }\n})",
                   "err": {},
-                  "uuid": "c9c8bb0a-0a02-4276-a31c-a7925536ff30",
-                  "parentUUID": "504fa974-bb44-48f0-8cdc-36720e217b29",
+                  "uuid": "18766efc-c7ab-44dc-883c-a204d89a902c",
+                  "parentUUID": "5d3bd9ec-84c3-4b30-a2f8-ad270f43e532",
                   "isHook": false,
                   "skipped": false
                 }
               ],
               "suites": [],
               "passes": [
-                "c9c8bb0a-0a02-4276-a31c-a7925536ff30"
+                "18766efc-c7ab-44dc-883c-a204d89a902c"
               ],
               "failures": [],
               "pending": [],
               "skipped": [],
-              "duration": 65,
+              "duration": 66,
               "root": false,
               "rootEmpty": false,
               "_timeout": 2000
             },
             {
-              "uuid": "81c8d638-00a4-41bc-8879-d3076cfcf43d",
+              "uuid": "7a119e90-6ba9-4edf-a7d3-ee941fcd97ad",
               "title": "Usuário comum",
               "fullFile": "/mnt/NAS/Programacao/QA/rafaelzanella/clinix/clinix-api-testing/src/tests/authentication/login.test.js",
               "file": "/src/tests/authentication/login.test.js",
@@ -125,7 +125,7 @@
                   "title": "Deve autenticar usuário comum com credenciais válidas",
                   "fullTitle": "Login de Usuário Usuário comum Deve autenticar usuário comum com credenciais válidas",
                   "timedOut": false,
-                  "duration": 65,
+                  "duration": 70,
                   "state": "passed",
                   "speed": "medium",
                   "pass": true,
@@ -134,20 +134,20 @@
                   "context": null,
                   "code": "const resposta = await apiAuthenticationLogin(emailUsuario, password)\nexpectLoginSuccess(resposta, { customValidations: (res) => {\n    expect(res.body.data.user.type).to.equal('USUARIO')\n  }\n})",
                   "err": {},
-                  "uuid": "f0b2ea57-7aef-4f65-88f0-ce9715d879c3",
-                  "parentUUID": "81c8d638-00a4-41bc-8879-d3076cfcf43d",
+                  "uuid": "097546fe-e6ab-4a24-856a-d8e24bb2d84d",
+                  "parentUUID": "7a119e90-6ba9-4edf-a7d3-ee941fcd97ad",
                   "isHook": false,
                   "skipped": false
                 }
               ],
               "suites": [],
               "passes": [
-                "f0b2ea57-7aef-4f65-88f0-ce9715d879c3"
+                "097546fe-e6ab-4a24-856a-d8e24bb2d84d"
               ],
               "failures": [],
               "pending": [],
               "skipped": [],
-              "duration": 65,
+              "duration": 70,
               "root": false,
               "rootEmpty": false,
               "_timeout": 2000

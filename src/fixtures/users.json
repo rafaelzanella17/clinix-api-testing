@@ -1,20 +1,20 @@
-{
-  "admin": {
-    "nome": "Admin Clinix",
-    "email": "admin@clinix.com",
-    "senha": "",
-    "tipo": "ADMIN"
-  },  
-  "farmaceutico": {
-    "nome": "Farmacêutico Clinix",
-    "email": "farmaceutico@clinix.com",
-    "senha": "",
-    "tipo": "FARMACEUTICO"
-  },
-  "usuario": {
-    "nome": "Usuário Clinix",
-    "email": "usuario@clinix.com",
-    "senha": "",
-    "tipo": "USUARIO"
-  }
+{ 
+  "admin": { 
+    "nome": "Admin Clinix", 
+    "email": "admin@clinix.com", 
+    "senha": "", 
+    "tipo": "ADMIN" 
+  }, 
+  "farmaceutico": { 
+    "nome": "Farmacêutico Clinix", 
+    "email": "farmaceutico@clinix.com", 
+    "senha": "", 
+    "tipo": "FARMACEUTICO" 
+  }, 
+  "usuario": { 
+    "nome": "Usuário Clinix", 
+    "email": "usuario@clinix.com", 
+    "senha": "", 
+    "tipo": "USUARIO" 
+  } 
 }
