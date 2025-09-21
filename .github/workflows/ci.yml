@@ -1,0 +1,75 @@
+name: clinix-api-testing CI with Reports # Nome do workflow
+
+on:
+  push:
+    branches: [main]       # Executa quando houver push na main
+  pull_request:
+    branches: [main]       # Executa quando abrir PR para main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest   # Runner do GitHub (Linux)
+
+    strategy:
+      matrix:
+        node-version: [22.x]  # Node.js 22 ou superior
+
+    steps:
+      # Passo 1: Pegar o código do repositório
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+
+      # Passo 2: Configurar Node.js
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Passo 3: Instalar dependências
+      - name: Instalar dependências
+        run: npm install
+
+      # -----------------------------
+      # TESTES DE FUNCIONALIDADE
+      # -----------------------------
+      - name: Rodar testes de funcionalidades
+        run: npm test
+        continue-on-error: false   # Se falhar, workflow marca como falha
+
+      # Passo 4: Salvar relatório Mochawesome
+      - name: Salvar relatório Mochawesome
+        uses: actions/upload-artifact@v3
+        with:
+          name: mochawesome-report
+          path: ./mochawesome-report  # Pasta padrão do Mochawesome
+
+      # Passo 5: Salvar relatório de cobertura c8
+      - name: Salvar relatório de cobertura c8
+        uses: actions/upload-artifact@v3
+        with:
+          name: c8-coverage-report
+          path: ./coverage   # Pasta padrão do c8
+
+      # -----------------------------
+      # TESTES DE PERFORMANCE
+      # -----------------------------
+      - name: Rodar testes de performance K6
+        run: npm run k6
+        continue-on-error: false   # Falha se os testes de performance falharem
+
+      # Passo 6: Salvar relatório K6
+      - name: Salvar relatório de performance K6
+        uses: actions/upload-artifact@v3
+        with:
+          name: k6-report
+          path: ./src/performance/k6/reports  # Pasta onde K6 exporta HTML
+
+      # -----------------------------
+      # RESUMO NO GITHUB ACTIONS
+      # -----------------------------
+      - name: Mostrar resumo dos testes
+        run: |
+          echo " Testes de funcionalidades e performance concluídos"
+          echo " Mochawesome report: artifacts/mochawesome-report"
+          echo " c8 coverage: artifacts/coverage"
+          echo " K6 report: artifacts/src/performance/k6/reports"
