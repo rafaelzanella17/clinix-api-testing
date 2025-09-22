@@ -17,17 +17,18 @@ jobs:
     steps:
       # Passo 1: Pegar o código do repositório
       - name: Checkout do repositório
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Passo 2: Configurar Node.js
       - name: Configurar Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'npm'  # Cache das dependências npm para acelerar builds
 
       # Passo 3: Instalar dependências
       - name: Instalar dependências
-        run: npm install
+        run: npm ci  # Usar npm ci ao invés de npm install para CI/CD
 
       # -----------------------------
       # TESTES DE FUNCIONALIDADE
@@ -38,17 +39,21 @@ jobs:
 
       # Passo 4: Salvar relatório Mochawesome
       - name: Salvar relatório Mochawesome
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
+        if: always()  # Sempre salva o relatório, mesmo se os testes falharem
         with:
           name: mochawesome-report
           path: ./mochawesome-report  # Pasta padrão do Mochawesome
+          retention-days: 30
 
       # Passo 5: Salvar relatório de cobertura c8
       - name: Salvar relatório de cobertura c8
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
+        if: always()  # Sempre salva o relatório, mesmo se os testes falharem
         with:
           name: c8-coverage-report
           path: ./coverage   # Pasta padrão do c8
+          retention-days: 30
 
       # -----------------------------
       # TESTES DE PERFORMANCE
@@ -59,10 +64,12 @@ jobs:
 
       # Passo 6: Salvar relatório K6
       - name: Salvar relatório de performance K6
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
+        if: always()  # Sempre salva o relatório, mesmo se os testes falharem
         with:
           name: k6-report
           path: ./src/performance/k6/reports  # Pasta onde K6 exporta HTML
+          retention-days: 30
 
       # -----------------------------
       # RESUMO NO GITHUB ACTIONS
