@@ -5,6 +5,11 @@ on:
     branches: [main]       # Executa quando houver push na main
   pull_request:
     branches: [main]       # Executa quando abrir PR para main
+  # Trigger manual para rodar quando quiser
+  workflow_dispatch:
+  # Executa também quando houver push na API (usando repository_dispatch)
+  repository_dispatch:
+    types: [api-updated]
 
 jobs:
   build-and-test:
@@ -15,29 +20,92 @@ jobs:
         node-version: [22.x]  # Node.js 22 ou superior
 
     steps:
-      # Passo 1: Pegar o código do repositório
-      - name: Checkout do repositório
+      # Passo 1: Pegar o código do repositório DE TESTES
+      - name: Checkout do repositório de testes
         uses: actions/checkout@v4
 
-      # Passo 2: Configurar Node.js
+      # Passo 2: Pegar o código da API (repositório separado)
+      - name: Checkout da API Clinix
+        uses: actions/checkout@v4
+        with:
+          repository: rafaelzanella17/clinix-api
+          ref: main  # ou a branch que você quer testar
+          path: ./clinix-api
+          # Se o repo da API for privado, você precisa do token
+          # token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Passo 3: Configurar Node.js
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'  # Cache das dependências npm para acelerar builds
 
-      # Passo 3: Instalar dependências
-      - name: Instalar dependências
-        run: npm ci  # Usar npm ci ao invés de npm install para CI/CD
+      # Passo 4: Instalar dependências da API
+      - name: Instalar dependências da API
+        run: |
+          cd clinix-api
+          npm ci
+
+      # Passo 5: Instalar dependências dos testes
+      - name: Instalar dependências dos testes
+        run: npm ci
+
+      # Passo 6: Configurar banco de dados (se necessário)
+      # Descomente se a API precisar de banco
+      # - name: Setup Database
+      #   run: |
+      #     cd clinix-api
+      #     # Rodar migrações ou seeds se necessário
+      #     # npm run db:migrate
+      #     # npm run db:seed
+
+      # Passo 7: Iniciar a API em background
+      - name: Iniciar API Clinix
+        run: |
+          cd clinix-api
+          echo "Iniciando API na porta 3000..."
+          npm start &
+          
+          # Aguardar a API subir (máximo 60 segundos)
+          echo "Aguardando API inicializar..."
+          for i in {1..30}; do
+            if curl -s -f http://localhost:3000/health >/dev/null 2>&1 || 
+               curl -s -f http://localhost:3000 >/dev/null 2>&1; then
+              echo "API está rodando!"
+              break
+            fi
+            echo "Tentativa $i/30 - Aguardando API..."
+            sleep 2
+          done
+        env:
+          NODE_ENV: test
+          PORT: 3000
+          # Adicione outras variáveis que sua API precisa
+          # DATABASE_URL: postgresql://test:test@localhost:5432/clinix_test
+
+      # Passo 8: Verificar se a API está respondendo
+      - name: Verificar status da API
+        run: |
+          echo "Testando endpoints da API..."
+          curl -v http://localhost:3000/ || echo "Endpoint raiz não disponível"
+          curl -v http://localhost:3000/health || echo "Health check não disponível"
+          
+          # Verificar se a API está ouvindo na porta 3000
+          netstat -tuln | grep :3000 || echo "Porta 3000 não está sendo usada"
 
       # -----------------------------
       # TESTES DE FUNCIONALIDADE
       # -----------------------------
       - name: Rodar testes de funcionalidades
         run: npm test
+        env:
+          BASE_URL: 'http://localhost:3000'
+          DEFAULT_PASSWORD: 'clinix'
+          NODE_ENV: 'test'
         continue-on-error: false   # Se falhar, workflow marca como falha
 
-      # Passo 4: Salvar relatório Mochawesome
+      # Passo 9: Salvar relatório Mochawesome
       - name: Salvar relatório Mochawesome
         uses: actions/upload-artifact@v4
         if: always()  # Sempre salva o relatório, mesmo se os testes falharem
@@ -46,7 +114,7 @@ jobs:
           path: ./mochawesome-report  # Pasta padrão do Mochawesome
           retention-days: 30
 
-      # Passo 5: Salvar relatório de cobertura c8
+      # Passo 10: Salvar relatório de cobertura c8
       - name: Salvar relatório de cobertura c8
         uses: actions/upload-artifact@v4
         if: always()  # Sempre salva o relatório, mesmo se os testes falharem
@@ -60,9 +128,12 @@ jobs:
       # -----------------------------
       - name: Rodar testes de performance K6
         run: npm run k6
+        env:
+          BASE_URL: 'http://localhost:3000'
+          DEFAULT_PASSWORD: 'clinix'
         continue-on-error: false   # Falha se os testes de performance falharem
 
-      # Passo 6: Salvar relatório K6
+      # Passo 11: Salvar relatório K6
       - name: Salvar relatório de performance K6
         uses: actions/upload-artifact@v4
         if: always()  # Sempre salva o relatório, mesmo se os testes falharem
@@ -71,12 +142,27 @@ jobs:
           path: ./src/performance/k6/reports  # Pasta onde K6 exporta HTML
           retention-days: 30
 
+      # Passo 12: Logs da API (para debug se algo der errado)
+      - name: Mostrar logs da API (se houver falha)
+        if: failure()
+        run: |
+          echo "=== Processos rodando ==="
+          ps aux | grep node || echo "Nenhum processo node encontrado"
+          echo "=== Portas em uso ==="
+          netstat -tuln | grep LISTEN || echo "Nenhuma porta ouvindo"
+          echo "=== Logs da API ==="
+          cd clinix-api
+          # Se sua API salvar logs em arquivo, mostrar aqui
+          # cat logs/app.log || echo "Arquivo de log não encontrado"
+
       # -----------------------------
       # RESUMO NO GITHUB ACTIONS
       # -----------------------------
       - name: Mostrar resumo dos testes
+        if: always()
         run: |
-          echo " Testes de funcionalidades e performance concluídos"
-          echo " Mochawesome report: artifacts/mochawesome-report"
-          echo " c8 coverage: artifacts/coverage"
-          echo " K6 report: artifacts/src/performance/k6/reports"
+          echo "Testes de funcionalidades e performance concluidos"
+          echo "Mochawesome report: artifacts/mochawesome-report"
+          echo "c8 coverage: artifacts/coverage"
+          echo "K6 report: artifacts/src/performance/k6/reports"
+          echo "API testada: http://localhost:3000"
