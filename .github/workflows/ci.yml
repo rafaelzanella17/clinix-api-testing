@@ -116,7 +116,7 @@ jobs:
 
       # Passo 9: Salvar relatório Mochawesome
       - name: Salvar relatório Mochawesome
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: always()  # Sempre salva o relatório, mesmo se os testes falharem
         with:
           name: mochawesome-report
@@ -125,7 +125,7 @@ jobs:
 
       # Passo 10: Salvar relatório de cobertura c8
       - name: Salvar relatório de cobertura c8
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: always()  # Sempre salva o relatório, mesmo se os testes falharem
         with:
           name: c8-coverage-report
@@ -144,7 +144,7 @@ jobs:
 
       # Passo 11: Salvar relatório K6
       - name: Salvar relatório de performance K6
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: always()  # Sempre salva o relatório, mesmo se os testes falharem
         with:
           name: k6-report
