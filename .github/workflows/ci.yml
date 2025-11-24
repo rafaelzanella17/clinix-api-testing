@@ -22,11 +22,11 @@ jobs:
     steps:
       # Passo 1: Pegar o código do repositório DE TESTES
       - name: Checkout do repositório de testes
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # Passo 2: Pegar o código da API (repositório separado)
       - name: Checkout da API Clinix
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: rafaelzanella17/clinix-api
           ref: main  # ou a branch que você quer testar
